@@ -50,5 +50,23 @@ app.listen(appEnv.port, '0.0.0.0', function() {
 
 function _filterTweet(tweetHashTags) 
 {
-	console.log(tweetHashTags)
+    var response = "";
+    if(tweetHashTags.toLowerCase() == "overwatch") {
+        response = "Swag";
+    }
+
+    switch(tweetHashTags.toLowerCase()) {
+        case "overwatch":
+            response = "You said overwatch";
+            break;
+        case "battlefield2" || "bf2":
+            response = "You said bf2";
+            break;
+        default:
+            response = "You're an idiot that said nothing";
+    }
+
+    console.log(tweetHashTags);
+    console.log(response);
 }
+
