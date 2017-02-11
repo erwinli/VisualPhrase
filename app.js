@@ -24,10 +24,10 @@ app.use(express.static(__dirname + '/public'));
 var appEnv = cfenv.getAppEnv();
 
 var T = new Twit({
-  consumer_key:         'xfCRfA8jHLxw8YTyTFfCQDJSI',
-  consumer_secret:      'QCO163pPZbLsSdvUsyykRlmTcPF2eVlrdR77eCnMSZsCyMrhS7',
-  access_token:         '632529421-a8gqQ9bLM48rTfOdSe0PlBrCnpI14NIYNdAZUNsU',
-  access_token_secret:  'yNJTpCBTteSlu67BgRumZFnSQ8Y7eJAZle5LbDVL9Wz0t',
+  consumer_key:         'NuCNdo6SiGuHJCSsIduRoUh7O',
+  consumer_secret:      'EDaiyLqPDOZiZwIbl0ngyxMKDFbK2y7ITOHpwuWizLejcVl31z',
+  access_token:         '830510599155036162-85YZk7rqcjq9YJBACyZ93cUrN1kizew',
+  access_token_secret:  'eF5ox3papWLEnoSaKaCTY9myxwi3tE2l57guP69lXDoV1',
   timeout_ms:           60*1000,  // optional HTTP request timeout to apply to all requests.
 })
 
@@ -40,7 +40,7 @@ stream.on('tweet', function (tweet) {
 	_storeUserAndHashtags(tweet.user.screen_name, tweet.entities.hashtags);
     var hashtags = tweet.entities.hashtags;
     console.log(hashtags);
-    _sendTweet('asdf');
+    _sendTweet('@' + tweet.user.screen_name + " Swoggity Swiitles, I'm coming for dem Skittles");
 })
 
 // start server on the specified port and binding host
@@ -57,7 +57,7 @@ function _sendTweet(status)
   	} else if(status.length > 140) {
     	return callback(new Error('tweet is too long: ' + status.length));
   	}
-	T.post('statuses/update', { status: "Swogity Swittles, I'm coming for dem Skittles!" }, function(err, data, response) {
+	T.post('statuses/update', { status: status }, function(err, data, response) {
 	  console.log(data)
 	})
 }
