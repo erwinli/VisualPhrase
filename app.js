@@ -32,10 +32,15 @@ var T = new Twit({
 })
 
 var stream = T.stream('statuses/filter', { track: '#frostycon'})
+var users = [];
+var hashtagList = [];
+var count = 0;
 
 stream.on('tweet', function (tweet) {
 	console.log(tweet);
-	//_storeUserAndHashtags(tweet.user.screen_name, tweet.entities.hashtags);
+	console.log(tweet.user.screen_name);
+	console.log(tweet.entities.hashtags);
+	_storeUserAndHashtags(tweet.user.screen_name, tweet.entities.hashtags);
     //_sendTweet(tweet.entities.hashtags);
 })
 
@@ -49,17 +54,20 @@ app.listen(appEnv.port, '0.0.0.0', function() {
 
 function _storeUserAndHashtags(screenname, hashtags)
 {
-	console.log('testa');
-	userHashTag.screenname = hashtags;
+	console.log(screenname);
+	console.log(hashtags);
 
-	console.log(userHashTag);
+	users.push(screenname);
+	hashtagList.push(hashtags);
+	count++;
+
+	console.log(users);
+	console.log(hashtagList);
 }
 
-function _sendTweet(tweetHashTags) 
+function _findGetUsersWithHashtag(hashtag)
 {
-	var userList = '';
-
-	tweetHashTags.forEach(function(hashTag) {
-		console.log(hashTag);
-	});
+	for(var i = 0; i < count;i++){
+    	console.log(hashtagList);    
+  	}
 }
