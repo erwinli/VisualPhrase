@@ -8,7 +8,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="stylesheets/style.css">
   </head>
+<script src="https://code.jquery.com/jquery-3.1.1.slim.min.js"
+  integrity="sha256-/SIrNqv8h6QGKDuNoLGA4iret+kyesCkHGzVUUV0shc="
+  crossorigin="anonymous">
+	console.log("STARTING")
+	$(document).ready(documentLoaded);
+	function documentLoaded(){
+			console.log("HELLO WORLD");
+			searchTweets("Canucks","searchResults");
+		}
+		
+	function searchTweets(searchTerm, pageElementID){
+		var url = "https://40c0d093-7c6d-4ce6-9989-a8939ea00ab2:rtbAmMFGCr@cdeservice.mybluemix.netapi/v1/messages/search?q="+searchTerm;
 
+		var response = $.get(url, "text");
+	
+		console.log(response);
+	
+		var element = $(pageElementID);
+		console.log()
+		element.text(response);
+	}
+</script>
   <body>
     <table>
       <tr>
@@ -18,9 +39,9 @@
         <td>
           <h1 id="message">Hello Cool</h1>
           <p class='description'></p> Thanks for creating a <span class = "blue">NodeJS Starter Application</span>.
+		  <p id="searchResults"></p>
         </td>
       </tr>
     </table>
   </body>
-
 </html>
