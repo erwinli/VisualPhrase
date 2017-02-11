@@ -7,11 +7,33 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="stylesheets/style.css">
-  </head>
-<script src="https://code.jquery.com/jquery-3.1.1.slim.min.js"
-  integrity="sha256-/SIrNqv8h6QGKDuNoLGA4iret+kyesCkHGzVUUV0shc="
-  crossorigin="anonymous">
-	console.log("STARTING")
+    <script
+            src="https://code.jquery.com/jquery-3.1.1.min.js"
+            integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+            crossorigin="anonymous"></script>
+    <script>
+/*       
+	   var watson = require('watson-developer-cloud');
+        var fs = require('fs');
+
+        var visual_recognition = watson.visual_recognition({
+            api_key: 'be6e80ae89a8c37fd5537a556bd64b8774b0d043',
+            version: 'v3',
+            version_date: '2016-05-20'
+        });
+
+        var params = {
+            images_file: fs.createReadStream('https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcSusIV9-WSpQE6sH4m64F990KRXhVd6hA1mDiUNevOIiprj659ESuQiB7E')
+        };
+
+        visual_recognition.classify(params, function(err, res) {
+            if (err)
+                console.log(err);
+            else
+                console.log(JSON.stringify(res, null, 2));
+        });
+	*/	
+		console.log("STARTING")
 	$(document).ready(documentLoaded);
 	function documentLoaded(){
 			console.log("HELLO WORLD");
@@ -19,7 +41,7 @@
 		}
 		
 	function searchTweets(searchTerm, pageElementID){
-		var url = "https://40c0d093-7c6d-4ce6-9989-a8939ea00ab2:rtbAmMFGCr@cdeservice.mybluemix.netapi/v1/messages/search?q="+searchTerm;
+		var url = "https://40c0d093-7c6d-4ce6-9989-a8939ea00ab2:rtbAmMFGCr@cdeservice.mybluemix.net/api/v1/messages/search?q="+searchTerm;
 
 		var response = $.get(url, "text");
 	
@@ -29,7 +51,8 @@
 		console.log()
 		element.text(response);
 	}
-</script>
+    </script>
+  </head>
   <body>
     <table>
       <tr>
@@ -39,9 +62,19 @@
         <td>
           <h1 id="message">Hello Cool</h1>
           <p class='description'></p> Thanks for creating a <span class = "blue">NodeJS Starter Application</span>.
+<<<<<<< HEAD
 		  <p id="searchResults"></p>
         </td>
       </tr>
     </table>
   </body>
 </html>
+=======
+          <p>Test</p>
+        </td>
+      </tr>
+    </table>
+
+  </body>
+</html>
+>>>>>>> origin/master
