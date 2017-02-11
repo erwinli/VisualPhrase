@@ -7,7 +7,6 @@
 // This application uses express as its web server
 // for more info, see: http://expressjs.com
 var express = require('express');
-
 // cfenv provides access to your Cloud Foundry environment
 // for more info, see: https://www.npmjs.com/package/cfenv
 var cfenv = require('cfenv');
@@ -24,8 +23,6 @@ app.use(express.static(__dirname + '/public'));
 // get the app environment from Cloud Foundry
 var appEnv = cfenv.getAppEnv();
 
-
-
 var T = new Twit({
   consumer_key:         'xfCRfA8jHLxw8YTyTFfCQDJSI',
   consumer_secret:      'QCO163pPZbLsSdvUsyykRlmTcPF2eVlrdR77eCnMSZsCyMrhS7',
@@ -37,18 +34,32 @@ var T = new Twit({
 var stream = T.stream('statuses/filter', { track: '#frostycon'})
 
 stream.on('tweet', function (tweet) {
-	console.log(tweet.entities.media);
-  //_filterTweet(tweet.entities.hashtags)
+	console.log(tweet);
+	//_storeUserAndHashtags(tweet.user.screen_name, tweet.entities.hashtags);
+    //_sendTweet(tweet.entities.hashtags);
 })
-
 
 // start server on the specified port and binding host
 app.listen(appEnv.port, '0.0.0.0', function() {
   // print a message when the server starts listening
   console.log("server starting on " + appEnv.url);
+  console.log('asdf');
 });
 
-function _filterTweet(tweetHashTags) 
+
+function _storeUserAndHashtags(screenname, hashtags)
 {
-	console.log(tweetHashTags)
+	console.log('testa');
+	userHashTag.screenname = hashtags;
+
+	console.log(userHashTag);
+}
+
+function _sendTweet(tweetHashTags) 
+{
+	var userList = '';
+
+	tweetHashTags.forEach(function(hashTag) {
+		console.log(hashTag);
+	});
 }
