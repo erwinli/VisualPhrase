@@ -23,7 +23,7 @@
       var data = JSON.parse(res.response);
       var labels = data.images[0].labels;
       var result = "&lt;p&gt;Detected the following possible items:&lt;br/&gt;";
-      for(var i=0; len=labels.length; i++) {
+      for(var i=0, len=labels.length; i<len; i++) {
       result += "&lt;b&gt;"+labels[i].label_name + "&lt;/b&gt;&lt;br/&gt;";
       }
       $("#status").html(result);
