@@ -9,7 +9,7 @@
 		"express": "4.13.x",
 		"cfenv": "1.0.x",
 		"twit" : "^2.2.4",
-		"jQuery" : "^3.1.0"
+		"jquery" : "^3.1.0"
 	},
 	"repository": {},
 	"engines": {
