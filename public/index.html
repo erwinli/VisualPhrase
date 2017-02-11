@@ -12,69 +12,25 @@
             integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
             crossorigin="anonymous"></script>
     <script>
+        var watson = require('watson-developer-cloud');
+        var fs = require('fs');
 
-      var API_URL = "https://gateway-a.watsonplatform.net/visual-recognition/api";
-      var API_KEY = "be6e80ae89a8c37fd5537a556bd64b8774b0d043";
-      var API_PASSWORD = "anothersecret";
+        var visual_recognition = watson.visual_recognition({
+            api_key: 'be6e80ae89a8c37fd5537a556bd64b8774b0d043',
+            version: 'v3',
+            version_date: '2016-05-20'
+        });
 
-      $(document).on("deviceready", function() {
+        var params = {
+            images_file: fs.createReadStream('https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcSusIV9-WSpQE6sH4m64F990KRXhVd6hA1mDiUNevOIiprj659ESuQiB7E')
+        };
 
-      function uploadWin(res) {
-      var data = JSON.parse(res.response);
-      var labels = data.images[0].labels;
-      var result = "&lt;p&gt;Detected the following possible items:&lt;br/&gt;";
-      for(var i=0, len=labels.length; i<len; i++) {
-      result += "&lt;b&gt;"+labels[i].label_name + "&lt;/b&gt;&lt;br/&gt;";
-      }
-      $("#status").html(result);
-      }
-
-      function uploadFail() {
-      console.log('uploadFail');
-      console.dir(arguments);
-      }
-
-      //Credit: http://stackoverflow.com/a/14313052/52160
-      function authHeaderValue(API_KEY) {
-      var tok = API_KEY;
-      var hash = btoa(tok);
-      return "Basic " + hash;
-      };
-
-      function onCamSuccess(imageData) {
-      var image = document.getElementById('myImage');
-      $("#imgDisplay").attr("src", imageData);
-
-      $("#status").html("&lt;i&gt;Uploading picture for BlueMix analysis...&lt;/i&gt;");
-
-      var options = new FileUploadOptions();
-      options.fileKey = "img_file";
-      options.fileName = imageData.substr(imageData.lastIndexOf('/') + 1);
-
-      options.headers = {'Authorization': authHeaderValue(API_USER, API_PASSWORD) };
-
-      var ft = new FileTransfer();
-      ft.upload(imageData, encodeURI(API_URL+"/v1/tag/recognize"), uploadWin, uploadFail, options);
-
-      }
-
-      function onCamFail(message) {
-      alert('Failed because: ' + message);
-      }
-
-      //Touch handlers for the two buttons, one uses lib, one uses cam
-      $("#cameraButton, #galleryButton").on("touchend", function() {
-      var source = ($(this).prop("id")==="cameraButton")?Camera.PictureSourceType.CAMERA:Camera.PictureSourceType.PHOTOLIBRARY;
-
-      navigator.camera.getPicture(onCamSuccess, onCamFail, {
-      quality: 50,
-      sourceType: source,
-      destinationType: Camera.DestinationType.FILE_URI
-      });
-
-      });
-
-      });
+        visual_recognition.classify(params, function(err, res) {
+            if (err)
+                console.log(err);
+            else
+                console.log(JSON.stringify(res, null, 2));
+        });
     </script>
   </head>
 
