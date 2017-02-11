@@ -7,6 +7,72 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="stylesheets/style.css">
+    <script src="jquery-3.1.1.min.js"></script>
+    <script>
+
+      var API_URL = "https://gateway.watsonplatform.net/visual-recognition-beta/api";
+      var API_USER = "supersecret";
+      var API_PASSWORD = "anothersecret";
+
+      $(document).on("deviceready", function() {
+
+      function uploadWin(res) {
+      var data = JSON.parse(res.response);
+      var labels = data.images[0].labels;
+      var result = "&lt;p&gt;Detected the following possible items:&lt;br/&gt;";
+      for(var i=0, len=labels.length; i&lt;len; i++) {
+      result += "&lt;b&gt;"+labels[i].label_name + "&lt;/b&gt;&lt;br/&gt;";
+      }
+      $("#status").html(result);
+      }
+
+      function uploadFail() {
+      console.log('uploadFail');
+      console.dir(arguments);
+      }
+
+      //Credit: http://stackoverflow.com/a/14313052/52160
+      function authHeaderValue(username, password) {
+      var tok = username + ':' + password;
+      var hash = btoa(tok);
+      return "Basic " + hash;
+      };
+
+      function onCamSuccess(imageData) {
+      var image = document.getElementById('myImage');
+      $("#imgDisplay").attr("src", imageData);
+
+      $("#status").html("&lt;i&gt;Uploading picture for BlueMix analysis...&lt;/i&gt;");
+
+      var options = new FileUploadOptions();
+      options.fileKey = "img_file";
+      options.fileName = imageData.substr(imageData.lastIndexOf('/') + 1);
+
+      options.headers = {'Authorization': authHeaderValue(API_USER, API_PASSWORD) };
+
+      var ft = new FileTransfer();
+      ft.upload(imageData, encodeURI(API_URL+"/v1/tag/recognize"), uploadWin, uploadFail, options);
+
+      }
+
+      function onCamFail(message) {
+      alert('Failed because: ' + message);
+      }
+
+      //Touch handlers for the two buttons, one uses lib, one uses cam
+      $("#cameraButton, #galleryButton").on("touchend", function() {
+      var source = ($(this).prop("id")==="cameraButton")?Camera.PictureSourceType.CAMERA:Camera.PictureSourceType.PHOTOLIBRARY;
+
+      navigator.camera.getPicture(onCamSuccess, onCamFail, {
+      quality: 50,
+      sourceType: source,
+      destinationType: Camera.DestinationType.FILE_URI
+      });
+
+      });
+
+      });
+    </script>
   </head>
 
   <body>
@@ -18,9 +84,10 @@
         <td>
           <h1 id="message">Hello Cool</h1>
           <p class='description'></p> Thanks for creating a <span class = "blue">NodeJS Starter Application</span>.
+          <p>Test</p>
         </td>
       </tr>
     </table>
-  </body>
 
+  </body>
 </html>
