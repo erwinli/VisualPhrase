@@ -13,8 +13,8 @@
             crossorigin="anonymous"></script>
     <script>
 
-      var API_URL = "https://gateway.watsonplatform.net/visual-recognition-beta/api";
-      var API_USER = "supersecret";
+      var API_URL = "https://gateway-a.watsonplatform.net/visual-recognition/api";
+      var API_KEY = "be6e80ae89a8c37fd5537a556bd64b8774b0d043";
       var API_PASSWORD = "anothersecret";
 
       $(document).on("deviceready", function() {
@@ -35,8 +35,8 @@
       }
 
       //Credit: http://stackoverflow.com/a/14313052/52160
-      function authHeaderValue(username, password) {
-      var tok = username + ':' + password;
+      function authHeaderValue(API_KEY) {
+      var tok = API_KEY;
       var hash = btoa(tok);
       return "Basic " + hash;
       };
