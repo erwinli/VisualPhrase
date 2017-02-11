@@ -37,8 +37,9 @@ var T = new Twit({
 var stream = T.stream('statuses/filter', { track: '#frostycon'})
 
 stream.on('tweet', function (tweet) {
-	console.log(tweet.entities.media);
-  //_filterTweet(tweet.entities.hashtags)
+    console.log("test");
+    console.log(tweet);
+  _filterTweet(tweet.entities.hashtags);
 })
 
 
@@ -50,6 +51,9 @@ app.listen(appEnv.port, '0.0.0.0', function() {
 
 function _filterTweet(tweetHashTags) 
 {
+    console.log("In filterTweet");
+    JSON.stringify(tweetHashTags);
+    console.log(tweetHashTags);
     var response = "";
     if(tweetHashTags.toLowerCase() == "overwatch") {
         response = "Swag";
