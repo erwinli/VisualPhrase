@@ -24,22 +24,6 @@ app.use(express.static(__dirname + '/public'));
 // get the app environment from Cloud Foundry
 var appEnv = cfenv.getAppEnv();
 
-
-
-var T = new Twit({
-  consumer_key:         'xfCRfA8jHLxw8YTyTFfCQDJSI',
-  consumer_secret:      'QCO163pPZbLsSdvUsyykRlmTcPF2eVlrdR77eCnMSZsCyMrhS7',
-  access_token:         '632529421-a8gqQ9bLM48rTfOdSe0PlBrCnpI14NIYNdAZUNsU',
-  access_token_secret:  'yNJTpCBTteSlu67BgRumZFnSQ8Y7eJAZle5LbDVL9Wz0t',
-  timeout_ms:           60*1000,  // optional HTTP request timeout to apply to all requests.
-})
-
-var stream = T.stream('statuses/filter', { track: '#frostycon', language: 'en' })
-
-stream.on('tweet', function (tweet) {
-  console.log(tweet)
-})
-
 // start server on the specified port and binding host
 app.listen(appEnv.port, '0.0.0.0', function() {
   // print a message when the server starts listening
