@@ -37,11 +37,10 @@ var hashtagList = [];
 var count = 0;
 
 stream.on('tweet', function (tweet) {
-	console.log(tweet);
-	console.log(tweet.user.screen_name);
-	console.log(tweet.entities.hashtags);
 	_storeUserAndHashtags(tweet.user.screen_name, tweet.entities.hashtags);
-    //_sendTweet(tweet.entities.hashtags);
+    var hashtags = tweet.entities.hashtags;
+    console.log(hashtags);
+    _sendTweet('asdf');
 })
 
 // start server on the specified port and binding host
@@ -51,23 +50,28 @@ app.listen(appEnv.port, '0.0.0.0', function() {
   console.log('asdf');
 });
 
+function _sendTweet(status)
+{
+  	if(typeof status !== 'string') {
+    	return callback(new Error('tweet must be of type String'));
+  	} else if(status.length > 140) {
+    	return callback(new Error('tweet is too long: ' + status.length));
+  	}
+	T.post('statuses/update', { status: "Swogity Swittles, I'm coming for dem Skittles!" }, function(err, data, response) {
+	  console.log(data)
+	})
+}
 
 function _storeUserAndHashtags(screenname, hashtags)
 {
-	console.log(screenname);
-	console.log(hashtags);
-
 	users.push(screenname);
 	hashtagList.push(hashtags);
 	count++;
-
-	console.log(users);
-	console.log(hashtagList);
 }
 
 function _findGetUsersWithHashtag(hashtag)
 {
-	for(var i = 0; i < count;i++){
-    	console.log(hashtagList);    
+	for(var i = 0; i < count; i++){
+    	console.log(hashtagList[0]);    
   	}
 }
