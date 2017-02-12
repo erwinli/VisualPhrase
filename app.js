@@ -25,44 +25,63 @@ var appEnv = cfenv.getAppEnv();
 var hashtagCache = {};
 
 var T = new Twit({
-  consumer_key:         'NuCNdo6SiGuHJCSsIduRoUh7O',
-  consumer_secret:      'EDaiyLqPDOZiZwIbl0ngyxMKDFbK2y7ITOHpwuWizLejcVl31z',
-  access_token:         '830510599155036162-85YZk7rqcjq9YJBACyZ93cUrN1kizew',
-  access_token_secret:  'eF5ox3papWLEnoSaKaCTY9myxwi3tE2l57guP69lXDoV1',
+  consumer_key:         'xfCRfA8jHLxw8YTyTFfCQDJSI',
+  consumer_secret:      'QCO163pPZbLsSdvUsyykRlmTcPF2eVlrdR77eCnMSZsCyMrhS7',
+  access_token:         '632529421-8BpmggszmMYpUUhSfcBAPP5LkI3j6nrwz66uGeMw',
+  access_token_secret:  'F1RYzl5SGQeF9AnadDuwBn7lyVkc6lkIp4nRxX6UwGyJS',
   timeout_ms:           60*1000,  // optional HTTP request timeout to apply to all requests.
 })
 
-var stream = T.stream('statuses/filter', { track: '#frostycon'})
-
-stream.on('tweet', function (tweet) {
+var frostyconStream = T.stream('statuses/filter', { track: '#frostycon'});
+var frostycongamesStream = T.stream('statuses/filter', { track: '#frostycongames'});
+frostyconStream.on('tweet', function(tweet) {
     var hashtags = tweet.entities.hashtags;
     console.log(tweet.user.name + ": " + tweet.text);
-    console.log(hashtagCache);
     hashtags.forEach(function(hashtagObj) {
-    	var hashtag = hashtagObj.text.toLowerCase();
-    	if (hashtag === "frostycon") {
-    		return;
-		}
+        var hashtag = hashtagObj.text.toLowerCase();
+        if (hashtag === "frostycon") {
+            return;
+        }
 
-    	if (hashtagCache[hashtag] === undefined) {
-    		hashtagCache[hashtag] = [tweet.user.screen_name];
-    		return;
-		}
+        if (hashtagCache[hashtag] === undefined) {
+            hashtagCache[hashtag] = [tweet.user.screen_name];
+            return;
+        }
 
-		var otherUsers = hashtagCache[hashtag].map(function addAtSymbol(user) {
-			return "@" + user;
-		});
+        var otherUsers = hashtagCache[hashtag].map(function addAtSymbol(user) {
+            return "@" + user;
+        });
 
-    	// "@bob, @jim are playing overwatch"
-    	var replyText = "@" + tweet.user.screen_name + ": " + otherUsers.join(", ") + " are playing " + hashtag;
-		_sendTweet(replyText);
+        // "@bob, @jim are playing overwatch"
+        var replyText = "@" + tweet.user.screen_name + ": " + otherUsers.join(", ") + " are playing " + hashtag;
+        _sendTweet(replyText);
 
-		hashtagCache[hashtag].push(tweet.user.screen_name);
-	});
+        hashtagCache[hashtag].push(tweet.user.screen_name);
+    });
     if (hashtags.length == 1) {
         _sendTweet('@' + tweet.user.screen_name + " Swoggity Swiitles, I'm coming for dem Skittles");
     }
+
+    console.log("current game cache: ", hashtagCache);
 })
+frostycongamesStream.on('tweet', function(tweet) {
+    console.log(tweet.user.name + ": " + tweet.text);
+    tweet.entities.hashtags.forEach(function(hashtagObj) {
+        if (hashtagObj.text === "frostycongames") {
+            var games = [];
+            for (var property in hashtagCache) {
+                if (hashtagCache.hasOwnProperty(property)) {
+                    games.push(property);
+                }
+            }
+
+            var gamesText = games.join(", ");
+            _sendTweet('@' + tweet.user.screen_name + ": Games currently being played: " + gamesText);
+        }
+    });
+
+    console.log("current game cache: ", hashtagCache);
+});
 
 // start server on the specified port and binding host
 app.listen(appEnv.port, '0.0.0.0', function() {
@@ -79,6 +98,8 @@ function _sendTweet(status)
   	}
   	console.log("Posting: " + status);
 	T.post('statuses/update', { status: status }, function(err, data, response) {
-	  console.log("Status post error", err, data);
+	    if (err) {
+            console.log("Status post error", err);
+        }
 	})
 }
