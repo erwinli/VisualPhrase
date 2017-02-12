@@ -22,6 +22,7 @@ app.use(express.static(__dirname + '/public'));
 
 // get the app environment from Cloud Foundry
 var appEnv = cfenv.getAppEnv();
+var hashtagCache = {};
 
 var T = new Twit({
   consumer_key:         'NuCNdo6SiGuHJCSsIduRoUh7O',
@@ -32,22 +33,41 @@ var T = new Twit({
 })
 
 var stream = T.stream('statuses/filter', { track: '#frostycon'})
-var users = [];
-var hashtagList = [];
-var count = 0;
 
 stream.on('tweet', function (tweet) {
-	_storeUserAndHashtags(tweet.user.screen_name, tweet.entities.hashtags);
     var hashtags = tweet.entities.hashtags;
-    console.log(hashtags);
-    _sendTweet('@' + tweet.user.screen_name + " Swoggity Swiitles, I'm coming for dem Skittles");
+    console.log(tweet.user.name + ": " + tweet.text);
+    console.log(hashtagCache);
+    hashtags.forEach(function(hashtagObj) {
+    	var hashtag = hashtagObj.text.toLowerCase();
+    	if (hashtag === "frostycon") {
+    		return;
+		}
+
+    	if (hashtagCache[hashtag] === undefined) {
+    		hashtagCache[hashtag] = [tweet.user.screen_name];
+    		return;
+		}
+
+		var otherUsers = hashtagCache[hashtag].map(function addAtSymbol(user) {
+			return "@" + user;
+		});
+
+    	// "@bob, @jim are playing overwatch"
+    	var replyText = "@" + tweet.user.screen_name + ": " + otherUsers.join(", ") + " are playing " + hashtag;
+		_sendTweet(replyText);
+
+		hashtagCache[hashtag].push(tweet.user.screen_name);
+	});
+    if (hashtags.length == 1) {
+        _sendTweet('@' + tweet.user.screen_name + " Swoggity Swiitles, I'm coming for dem Skittles");
+    }
 })
 
 // start server on the specified port and binding host
 app.listen(appEnv.port, '0.0.0.0', function() {
   // print a message when the server starts listening
   console.log("server starting on " + appEnv.url);
-  console.log('asdf');
 });
 
 function _sendTweet(status)
@@ -57,21 +77,8 @@ function _sendTweet(status)
   	} else if(status.length > 140) {
     	return callback(new Error('tweet is too long: ' + status.length));
   	}
+  	console.log("Posting: " + status);
 	T.post('statuses/update', { status: status }, function(err, data, response) {
-	  console.log(data)
+	  console.log("Status post error", err, data);
 	})
-}
-
-function _storeUserAndHashtags(screenname, hashtags)
-{
-	users.push(screenname);
-	hashtagList.push(hashtags);
-	count++;
-}
-
-function _findGetUsersWithHashtag(hashtag)
-{
-	for(var i = 0; i < count; i++){
-    	console.log(hashtagList[0]);    
-  	}
 }
