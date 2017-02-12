@@ -59,7 +59,8 @@ frostyconStream.on('tweet', function(tweet) {
         hashtagCache[hashtag].push(tweet.user.screen_name);
     });
     if (hashtags.length == 1) {
-        _sendTweet('@' + tweet.user.screen_name + " Swoggity Swiitles, I'm coming for dem Skittles");
+        var index = Math.floor(Math.random() * shitposts.length);
+        _sendTweet('@' + tweet.user.screen_name + " " + shitposts[index]);
     }
 
     console.log("current game cache: ", hashtagCache);
@@ -103,3 +104,19 @@ function _sendTweet(status)
         }
 	})
 }
+
+var shitposts = [
+    "Swoggity Swiitles, I'm coming for dem Skittles",
+    "Hanzo/Genji mains make me salty",
+    "I never forget a face, but in your case, I'll gladly make an exception <3",
+    "Deez nuts",
+    "Goteem",
+    "I've had a perfectly wonderful evening, but this wasn't it",
+    "Fuzzlesoft Cloud Service is guaranteed to solve all of your problems™",
+    "Rust is the best language evah made",
+    "Different different systems",
+    "IBM Bluemix > AWS",
+    "Grace and peace",
+    "egg",
+    "Ball hands"
+];
